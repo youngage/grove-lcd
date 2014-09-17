@@ -84,15 +84,13 @@ class Display(object):
 
     def cmd(self, command):
         assert command >= 0 and command < 256
-        self.bus.write_byte(self.address, 0x80)
-        self.bus.write_byte(self.address, command)
+        self.bus.write_byte_data(self.address, 0x80, command)
         print 'cmd %x' % command
 
     def write_char(self, c):
         assert c >= 0 and c < 256
         print 'write char %x' % c
-        self.bus.write_byte(self.address, 0x40)
-        self.bus.write_byte(self.address, c)
+        self.bus.write_byte_data(self.address, 0x40, c)
 
     def write(self, text):
         for char in text:
