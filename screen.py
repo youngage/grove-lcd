@@ -7,7 +7,7 @@
 from smbus import SMBus
 import time
 
-class Display(object):
+class Screen(object):
     # commands
     LCD_CLEARDISPLAY = 0x01
     LCD_RETURNHOME = 0x02
@@ -85,11 +85,9 @@ class Display(object):
     def cmd(self, command):
         assert command >= 0 and command < 256
         self.bus.write_byte_data(self.address, 0x80, command)
-        print 'cmd %x' % command
 
     def write_char(self, c):
         assert c >= 0 and c < 256
-        print 'write char %x' % c
         self.bus.write_byte_data(self.address, 0x40, c)
 
     def write(self, text):
@@ -112,12 +110,13 @@ class Display(object):
         self.cmd(self.LCD_RETURNHOME)
         time.sleep(0.002) # 2ms
 
-if __name__ == '__main__':
-    import time
+    def setCursor(self, col, row):
+        col = (col | 0x80) if row == 0 else (col | 0xc0)
+        self.cmd(col)
 
+if __name__ == '__main__':
     bus = SMBus(1)
-    d = Display(bus, 0x3E)
+    d = Screen(bus, 0x3E)
 
     d.home()
     d.write('Hallo Welt')
-
